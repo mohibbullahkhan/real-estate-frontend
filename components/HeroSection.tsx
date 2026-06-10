@@ -9,7 +9,7 @@ import { Globe, Menu, X, ChevronDown } from "lucide-react";
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
 });
 
 const fadeIn = (delay = 0) => ({
