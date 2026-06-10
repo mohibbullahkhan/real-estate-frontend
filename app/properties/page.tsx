@@ -1,25 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { Bed, Bath, MapPin, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 
-const ALL_PROPERTIES = [
-  { id: 1, image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800", beds: 5, baths: 2, sqft: 3200, type: "Villa", name: "The Pinnacle at Highland Park", price: 3567980, location: "New York, NY", badge: "Featured" },
-  { id: 2, image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800", beds: 4, baths: 3, sqft: 2800, type: "House", name: "Modern Retreat by the Lake", price: 2150000, location: "Chicago, IL", badge: "New" },
-  { id: 3, image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800", beds: 6, baths: 4, sqft: 4500, type: "Villa", name: "Grand Estate in the Valley", price: 5200000, location: "Los Angeles, CA", badge: "Luxury" },
-  { id: 4, image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800", beds: 3, baths: 2, sqft: 1800, type: "House", name: "Cozy Suburban Family Home", price: 1850000, location: "Austin, TX", badge: "For Sale" },
-  { id: 5, image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800", beds: 5, baths: 3, sqft: 3800, type: "Villa", name: "Luxury Villa with Pool", price: 4100000, location: "Miami, FL", badge: "For Sale" },
-  { id: 6, image: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800", beds: 4, baths: 2, sqft: 2200, type: "Townhouse", name: "Contemporary Urban Townhouse", price: 2950000, location: "Seattle, WA", badge: "New" },
-  { id: 7, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800", beds: 3, baths: 2, sqft: 2100, type: "House", name: "Sunny Hillside Bungalow", price: 1650000, location: "Denver, CO", badge: "For Sale" },
-  { id: 8, image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800", beds: 4, baths: 3, sqft: 2600, type: "Apartment", name: "Skyline Penthouse Suite", price: 3200000, location: "New York, NY", badge: "Luxury" },
-  { id: 9, image: "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d?w=800", beds: 2, baths: 1, sqft: 1200, type: "Apartment", name: "Downtown Studio Loft", price: 980000, location: "Chicago, IL", badge: "New" },
-  { id: 10, image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800", beds: 5, baths: 4, sqft: 4100, type: "Villa", name: "Mediterranean Oceanfront Villa", price: 6800000, location: "Miami, FL", badge: "Luxury" },
-  { id: 11, image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800", beds: 3, baths: 2, sqft: 1900, type: "Townhouse", name: "Historic Brick Townhome", price: 2100000, location: "Boston, MA", badge: "Featured" },
-  { id: 12, image: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800", beds: 4, baths: 3, sqft: 3000, type: "House", name: "Lakefront Retreat with Dock", price: 3750000, location: "Austin, TX", badge: "For Sale" },
-];
+import { ALL_PROPERTIES } from "@/lib/data";
 
 const PROPERTY_TYPES = ["All", "House", "Villa", "Apartment", "Townhouse"];
 const PRICE_RANGES = [
@@ -36,11 +24,13 @@ function formatPrice(n: number) {
   return "$" + (n / 1000000).toFixed(1) + "M";
 }
 
-export default function PropertiesPage() {
-  const [search, setSearch] = useState("");
-  const [activeType, setActiveType] = useState("All");
-  const [priceRange, setPriceRange] = useState(0);
-  const [beds, setBeds] = useState("Any");
+function PropertiesContent() {
+  const searchParams = useSearchParams();
+  
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [activeType, setActiveType] = useState(searchParams.get("type") || "All");
+  const [priceRange, setPriceRange] = useState(Number(searchParams.get("price")) || 0);
+  const [beds, setBeds] = useState(searchParams.get("beds") || "Any");
   const [sort, setSort] = useState("Newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [saved, setSaved] = useState<number[]>([]);
@@ -218,9 +208,11 @@ export default function PropertiesPage() {
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <span className="text-[20px] font-bold text-black">{formatPrice(property.price)}</span>
-                      <button className="bg-black text-white text-[13px] font-medium px-4 py-2 rounded-full hover:bg-gray-800 transition-colors">
-                        View Details
-                      </button>
+                      <Link href={`/properties/${property.id}`}>
+                        <button className="bg-black text-white text-[13px] font-medium px-4 py-2 rounded-full hover:bg-gray-800 transition-colors">
+                          View Details
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -268,5 +260,17 @@ export default function PropertiesPage() {
         </section>
       </main>
     </div>
+  );
+}
+
+export default function PropertiesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <PropertiesContent />
+    </Suspense>
   );
 }

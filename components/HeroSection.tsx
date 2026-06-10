@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Globe, Menu, X, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
@@ -20,6 +21,23 @@ const fadeIn = (delay = 0) => ({
 
 export default function HeroSection() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+
+  // Search States
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priceRange, setPriceRange] = useState("0");
+  const [propertyType, setPropertyType] = useState("All");
+  const [beds, setBeds] = useState("Any");
+
+  const handleSearchClick = () => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (priceRange !== "0") params.set("price", priceRange);
+    if (propertyType !== "All") params.set("type", propertyType);
+    if (beds !== "Any") params.set("beds", beds);
+    
+    router.push(`/properties?${params.toString()}`);
+  };
 
   return (
     <div className="relative flex flex-col w-full">
@@ -184,7 +202,9 @@ export default function HeroSection() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter type"
+                  placeholder="Search by name or city..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full focus:ring-2 focus:ring-[#86efac] transition-all"
                 />
               </div>
@@ -195,11 +215,15 @@ export default function HeroSection() {
                   Price
                 </label>
                 <div className="relative">
-                  <select className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full appearance-none focus:ring-2 focus:ring-[#86efac] transition-all">
-                    <option>Price</option>
-                    <option>$100k - $500k</option>
-                    <option>$500k - $1M</option>
-                    <option>$1M+</option>
+                  <select 
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full appearance-none focus:ring-2 focus:ring-[#86efac] transition-all cursor-pointer"
+                  >
+                    <option value="0">Any Price</option>
+                    <option value="1">Under $2M</option>
+                    <option value="2">$2M - $4M</option>
+                    <option value="3">$4M+</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                 </div>
@@ -208,14 +232,19 @@ export default function HeroSection() {
               {/* Input 3 */}
               <div className="flex flex-col relative">
                 <label className="text-gray-500 text-sm font-medium mb-1">
-                  Locations
+                  Property Type
                 </label>
                 <div className="relative">
-                  <select className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full appearance-none focus:ring-2 focus:ring-[#86efac] transition-all">
-                    <option>Location</option>
-                    <option>New York</option>
-                    <option>Los Angeles</option>
-                    <option>Miami</option>
+                  <select 
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                    className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full appearance-none focus:ring-2 focus:ring-[#86efac] transition-all cursor-pointer"
+                  >
+                    <option value="All">All Types</option>
+                    <option value="House">House</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Townhouse">Townhouse</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                 </div>
@@ -228,13 +257,15 @@ export default function HeroSection() {
                 </label>
                 <div className="relative">
                   <select
-                    className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full appearance-none focus:ring-2 focus:ring-[#86efac] transition-all"
-                    defaultValue="2 Bed rooms"
+                    value={beds}
+                    onChange={(e) => setBeds(e.target.value)}
+                    className="bg-gray-100 rounded-xl px-4 py-3 outline-none text-black text-sm border-none w-full appearance-none focus:ring-2 focus:ring-[#86efac] transition-all cursor-pointer"
                   >
-                    <option>1 Bed room</option>
-                    <option value="2 Bed rooms">2 Bed rooms</option>
-                    <option>3 Bed rooms</option>
-                    <option>4+ Bed rooms</option>
+                    <option value="Any">Any</option>
+                    <option value="2+">2+ Beds</option>
+                    <option value="3+">3+ Beds</option>
+                    <option value="4+">4+ Beds</option>
+                    <option value="5+">5+ Beds</option>
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                 </div>
@@ -246,26 +277,29 @@ export default function HeroSection() {
               {/* Left: Filters */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <span className="text-gray-400 text-sm font-medium mr-1">
-                  Filter:
+                  Quick Select:
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  <button className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
-                    City
+                  <button onClick={() => setPropertyType("All")} className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
+                    All
                   </button>
-                  <button className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
+                  <button onClick={() => setPropertyType("House")} className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
                     House
                   </button>
-                  <button className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
-                    Residential
+                  <button onClick={() => setPropertyType("Villa")} className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
+                    Villa
                   </button>
-                  <button className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
+                  <button onClick={() => setPropertyType("Apartment")} className="bg-white border border-gray-200 text-gray-700 rounded-full px-4 py-1.5 text-sm font-normal hover:bg-gray-50 transition-colors">
                     Apartment
                   </button>
                 </div>
               </div>
 
               {/* Right: Search Button */}
-              <button className="bg-black text-white rounded-full px-6 py-3 text-sm font-medium hover:bg-gray-800 transition-colors w-full lg:w-auto">
+              <button 
+                onClick={handleSearchClick}
+                className="bg-black text-white rounded-full px-6 py-3 text-sm font-medium hover:bg-gray-800 transition-colors w-full lg:w-auto"
+              >
                 Search Properties
               </button>
             </div>
