@@ -66,36 +66,36 @@ export default function HeroSection() {
         </div>
 
         {/* Navbar */}
-        <nav className={`fixed top-0 inset-x-0 z-[100] w-full transition-all duration-300 ${scrolled ? "bg-black/85 backdrop-blur-lg py-4 shadow-xl border-b border-white/10" : "bg-transparent py-5"}`}>
+        <nav className={`fixed top-0 inset-x-0 z-[100] w-full transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-lg py-4 shadow-sm border-b border-gray-100" : "bg-transparent py-5"}`}>
           <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-white font-bold text-[20px] tracking-wide">
+          <Link href="/" className={`${scrolled ? "text-black" : "text-white"} font-bold text-[20px] tracking-wide transition-colors duration-300`}>
             EverGreen
           </Link>
 
           {/* Center Nav Links (Desktop) */}
-          <div className="hidden lg:flex items-center gap-8 bg-white/10 backdrop-blur-md rounded-full p-1.5 pr-6">
+          <div className={`hidden lg:flex items-center gap-8 backdrop-blur-md rounded-full p-1.5 pr-6 transition-colors duration-300 ${scrolled ? "bg-gray-100/80" : "bg-white/10"}`}>
             <Link
               href="/"
-              className="bg-white text-black px-5 py-2 rounded-full font-[400] text-[15px]"
+              className={`px-5 py-2 rounded-full font-[400] text-[15px] transition-colors duration-300 ${scrolled ? "bg-black text-white" : "bg-white text-black"}`}
             >
               Home
             </Link>
             <Link
               href="/about"
-              className="text-white hover:text-gray-200 font-[400] text-[15px]"
+              className={`font-[400] text-[15px] transition-colors duration-300 ${scrolled ? "text-gray-600 hover:text-black" : "text-white hover:text-gray-200"}`}
             >
               About Us
             </Link>
             <Link
               href="/properties"
-              className="text-white hover:text-gray-200 font-[400] text-[15px]"
+              className={`font-[400] text-[15px] transition-colors duration-300 ${scrolled ? "text-gray-600 hover:text-black" : "text-white hover:text-gray-200"}`}
             >
               Property List
             </Link>
             <Link
               href="/contact"
-              className="text-white hover:text-gray-200 font-[400] text-[15px]"
+              className={`font-[400] text-[15px] transition-colors duration-300 ${scrolled ? "text-gray-600 hover:text-black" : "text-white hover:text-gray-200"}`}
             >
               Contact Us
             </Link>
@@ -104,7 +104,7 @@ export default function HeroSection() {
           {/* Right Side */}
           <div className="hidden lg:flex items-center gap-6">
             {/* Lang */}
-            <div className="flex items-center gap-1 text-white cursor-pointer">
+            <div className={`flex items-center gap-1 cursor-pointer transition-colors duration-300 ${scrolled ? "text-gray-700 hover:text-black" : "text-white"}`}>
               <Globe className="w-[18px] h-[18px]" />
               <span className="text-[14px] font-[400]">Eng</span>
             </div>
@@ -119,7 +119,7 @@ export default function HeroSection() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden text-white relative z-[110]"
+            className={`lg:hidden relative z-[110] transition-colors duration-300 ${isMobileMenuOpen ? "text-white" : (scrolled ? "text-black" : "text-white")}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (

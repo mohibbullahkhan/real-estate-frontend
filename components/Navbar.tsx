@@ -66,11 +66,6 @@ export default function Navbar() {
               <Globe className="w-[16px] h-[16px]" />
               <span className="text-[13px] font-medium">Eng</span>
             </div>
-            <Link href="/signin">
-              <button className="text-gray-700 font-medium text-[14px] hover:text-black transition-colors">
-                Sign In
-              </button>
-            </Link>
             <Link href="/signup">
               <button className="bg-black text-white px-5 py-2.5 rounded-full font-medium text-[14px] hover:bg-gray-800 transition-colors">
                 Sign Up
