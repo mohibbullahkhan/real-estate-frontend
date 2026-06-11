@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Bed, Bath } from "lucide-react";
 
 export default function PropertiesSection() {
@@ -80,15 +81,18 @@ export default function PropertiesSection() {
               prime locations, ensuring an exclusive living experience.
             </p>
           </div>
-          <button className="bg-black text-white px-6 py-3 rounded-full font-medium hover:bg-gray-800 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 w-fit">
-            See All Properties <ArrowRight className="w-4 h-4" />
-          </button>
+          <Link href="/properties">
+            <button className="bg-black text-white px-6 py-3 rounded-full font-medium hover:bg-gray-800 transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 w-fit">
+              See All Properties <ArrowRight className="w-4 h-4" />
+            </button>
+          </Link>
         </div>
 
         {/* PROPERTY CARDS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
           {properties.map((property) => (
-            <div
+            <Link
+              href={`/properties/${property.id}`}
               key={property.id}
               className="flex flex-col group cursor-pointer"
             >
@@ -134,7 +138,14 @@ export default function PropertiesSection() {
                   · {property.location}
                 </span>
               </div>
-            </div>
+
+              {/* View Details Button */}
+              <div className="mt-4">
+                <button className="w-full bg-gray-100 text-black py-2.5 rounded-xl font-medium group-hover:bg-[#86efac] transition-colors">
+                  View Details
+                </button>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

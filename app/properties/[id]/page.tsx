@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ALL_PROPERTIES } from "@/lib/data";
 import Navbar from "@/components/Navbar";
 import CTASection from "@/components/CTASection";
+import PropertyGallerySlider from "@/components/PropertyGallerySlider";
 import { Bed, Bath, MapPin, Maximize, CheckCircle2, ArrowLeft, Heart, Share, Grid } from "lucide-react";
 
 function formatPrice(n: number) {
@@ -133,15 +134,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
               </div>
             </div>
 
-            {/* Secondary Images (if any) */}
-            {property.images.length > 1 && (
-              <div className="grid grid-cols-2 gap-4 h-[300px] md:h-[400px]">
-                {(property.images.slice(1, 3)).map((img, i) => (
-                  <div key={i} className="relative w-full h-full rounded-[32px] overflow-hidden group">
-                    <Image src={img} alt={`Gallery ${i}`} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                ))}
-              </div>
+            {/* Secondary Images Gallery Slider */}
+            {property.images.length > 0 && (
+              <PropertyGallerySlider images={property.images} />
             )}
           </div>
 

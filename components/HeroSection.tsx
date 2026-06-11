@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -29,6 +29,16 @@ export default function HeroSection() {
   const [propertyType, setPropertyType] = useState("All");
   const [beds, setBeds] = useState("Any");
 
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleSearchClick = () => {
     const params = new URLSearchParams();
     if (searchQuery) params.set("search", searchQuery);
@@ -42,7 +52,7 @@ export default function HeroSection() {
   return (
     <div className="relative flex flex-col w-full">
       {/* HERO WRAPPER (h-screen) */}
-      <div className="relative w-full h-screen min-h-[600px] flex flex-col">
+      <div className="relative w-full min-h-screen flex flex-col">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -56,7 +66,8 @@ export default function HeroSection() {
         </div>
 
         {/* Navbar */}
-        <nav className="relative z-50 w-full max-w-7xl mx-auto px-6 md:px-8 py-5 flex items-center justify-between">
+        <nav className={`fixed top-0 inset-x-0 z-[100] w-full transition-all duration-300 ${scrolled ? "bg-black/85 backdrop-blur-lg py-4 shadow-xl border-b border-white/10" : "bg-transparent py-5"}`}>
+          <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-white font-bold text-[20px] tracking-wide">
             EverGreen
@@ -92,9 +103,6 @@ export default function HeroSection() {
 
           {/* Right Side */}
           <div className="hidden lg:flex items-center gap-6">
-            {/* Divider */}
-            <div className="w-[2px] h-[20px] bg-purple-600 opacity-80"></div>
-
             {/* Lang */}
             <div className="flex items-center gap-1 text-white cursor-pointer">
               <Globe className="w-[18px] h-[18px]" />
@@ -111,7 +119,7 @@ export default function HeroSection() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden text-white relative z-50"
+            className="lg:hidden text-white relative z-[110]"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -120,6 +128,7 @@ export default function HeroSection() {
               <Menu className="w-7 h-7" />
             )}
           </button>
+          </div>
         </nav>
 
         {/* Mobile Menu Dropdown */}

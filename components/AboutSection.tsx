@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Play, ArrowLeft, ArrowRight, ArrowRight as ArrowRightIcon } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -114,9 +115,11 @@ export default function AboutSection() {
                 <p className="text-gray-500 text-[14px] mb-8 leading-relaxed px-2">
                   With thoughtful design and smart organization, you can maximize every inch, making room for creativity
                 </p>
-                <button className="border border-gray-200 bg-white text-black rounded-full px-8 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-                  Details
-                </button>
+                <Link href="/properties">
+                  <button className="border border-gray-200 bg-white text-black rounded-full px-8 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                    Details
+                  </button>
+                </Link>
               </div>
 
               {/* Right Card */}
@@ -133,9 +136,11 @@ export default function AboutSection() {
                   <h4 className="text-[18px] font-medium text-gray-600 mb-4">
                     Pricing Start at $256K
                   </h4>
-                  <button className="bg-black text-white rounded-full px-6 py-3 text-[14px] font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
-                    Explore Properties <ArrowRightIcon className="w-4 h-4" />
-                  </button>
+                  <Link href="/properties">
+                    <button className="bg-black text-white rounded-full px-6 py-3 text-[14px] font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                      Explore Properties <ArrowRightIcon className="w-4 h-4" />
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

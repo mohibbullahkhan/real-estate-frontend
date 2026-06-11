@@ -72,10 +72,10 @@ export default function TestimonialsSection() {
         </div>
 
         {/* SLIDER SECTION */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full min-w-0">
           
           {/* Main Content Row with Arrows */}
-          <div className="w-full flex items-center gap-4 lg:gap-8 relative">
+          <div className="w-full flex items-center gap-4 lg:gap-8 relative min-w-0">
             
             {/* Left Arrow (Hidden on mobile) */}
             <button 
@@ -86,13 +86,16 @@ export default function TestimonialsSection() {
             </button>
 
             {/* Testimonial Card */}
-            <div className="flex-1 bg-[#f7f7f7] rounded-[2rem] p-8 lg:p-10 relative overflow-hidden">
+            <div className="flex-1 min-w-0 w-full bg-[#f7f7f7] rounded-[2rem] p-6 lg:p-10 relative overflow-hidden">
               <div 
-                className="flex transition-transform duration-500 ease-in-out" 
+                className="flex flex-nowrap transition-transform duration-500 ease-in-out w-full" 
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
                 {testimonials.map((testimonial) => (
-                  <div key={testimonial.id} className="w-full shrink-0 flex flex-col md:flex-row gap-8 lg:gap-12">
+                  <div 
+                    key={testimonial.id} 
+                    className="w-full shrink-0 flex flex-col md:flex-row gap-6 lg:gap-12"
+                  >
                     
                     {/* Left Column: Photo (~35%) */}
                     <div className="w-full md:w-[35%] shrink-0">
