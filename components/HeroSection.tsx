@@ -160,7 +160,7 @@ export default function HeroSection() {
         )}
 
         {/* Hero Content positioned at bottom */}
-        <div className="relative z-10 w-full flex-1 flex flex-col justify-end pb-8">
+        <div className="relative z-10 w-full flex-1 flex flex-col justify-end pb-8 pt-32">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 w-full max-w-7xl mx-auto px-6 md:px-8">
             {/* Left Side: Tags + Headline */}
             <div className="flex flex-col lg:w-[70%]">
