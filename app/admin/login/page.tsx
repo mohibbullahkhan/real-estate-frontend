@@ -7,7 +7,7 @@ import Image from 'next/image';
 import api from '@/lib/api';
 import { handleApiError } from '@/lib/utils';
 import { showError } from '@/lib/alerts';
-import { Command, ArrowRight, Home } from 'lucide-react';
+import { Command, ArrowRight, Home, Eye, EyeOff } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -15,6 +15,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   // If already authenticated, skip the login page entirely
   useEffect(() => {
@@ -152,19 +153,30 @@ export default function AdminLoginPage() {
                     Forgot password?
                   </Link>
                 </div>
-                <div className="relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    className="appearance-none block w-full px-4 py-3.5 border border-slate-200 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all sm:text-sm font-medium bg-slate-50/50 focus:bg-white"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      required
+                      className="appearance-none block w-full px-4 py-3.5 border border-slate-200 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all sm:text-sm font-medium bg-slate-50/50 focus:bg-white pr-12"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" aria-hidden="true" />
+                      ) : (
+                        <Eye className="h-5 w-5" aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
               </div>
             </div>
 
