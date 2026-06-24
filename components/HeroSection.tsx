@@ -30,13 +30,30 @@ export default function HeroSection() {
   const [beds, setBeds] = useState("Any");
 
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Check auth status
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token);
+      setIsAuthChecked(true);
+    };
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    window.addEventListener('auth-change', checkAuth);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('auth-change', checkAuth);
+    };
   }, []);
 
   const handleSearchClick = () => {
@@ -103,18 +120,25 @@ export default function HeroSection() {
 
           {/* Right Side */}
           <div className="hidden lg:flex items-center gap-6">
-            {/* Lang */}
-            <div className={`flex items-center gap-1 cursor-pointer transition-colors duration-300 ${scrolled ? "text-gray-700 hover:text-black" : "text-white"}`}>
-              <Globe className="w-[18px] h-[18px]" />
-              <span className="text-[14px] font-[400]">Eng</span>
-            </div>
 
-            {/* Sign Up Button */}
-            <Link href="/signup">
-              <button className="bg-[#86efac] text-black px-6 py-2.5 rounded-full font-semibold text-[15px] hover:bg-[#4ade80] transition-colors border-none">
-                Sign Up
-              </button>
-            </Link>
+
+            {isAuthChecked && (
+              <>
+                {isAuthenticated ? (
+                  <Link href="/admin/dashboard">
+                    <button className={`${scrolled ? "bg-black text-white hover:bg-gray-800" : "bg-white/20 text-white hover:bg-white/30"} px-6 py-2.5 rounded-full font-semibold text-[15px] transition-colors border-none`}>
+                      Dashboard
+                    </button>
+                  </Link>
+                ) : (
+                  <Link href="/admin/login">
+                    <button className="bg-[#86efac] text-black px-6 py-2.5 rounded-full font-semibold text-[15px] hover:bg-[#4ade80] transition-colors border-none">
+                      Sign In
+                    </button>
+                  </Link>
+                )}
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -147,15 +171,24 @@ export default function HeroSection() {
               Contact Us
             </Link>
             <div className="h-px w-24 bg-gray-500 my-4"></div>
-            <div className="flex items-center gap-2 text-white">
-              <Globe className="w-6 h-6" />
-              <span className="text-xl">Eng</span>
-            </div>
-            <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-              <button className="bg-[#86efac] text-black px-8 py-3 rounded-full font-semibold text-lg mt-4">
-                Sign Up
-              </button>
-            </Link>
+
+            {isAuthChecked && (
+              <>
+                {isAuthenticated ? (
+                  <Link href="/admin/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="bg-gray-800 text-white px-8 py-3 rounded-full font-semibold text-lg mt-4">
+                      Dashboard
+                    </button>
+                  </Link>
+                ) : (
+                  <Link href="/admin/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="bg-[#86efac] text-black px-8 py-3 rounded-full font-semibold text-lg mt-4">
+                      Sign In
+                    </button>
+                  </Link>
+                )}
+              </>
+            )}
           </div>
         )}
 

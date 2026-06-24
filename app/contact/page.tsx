@@ -1,8 +1,45 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Mail, Phone, MapPin } from "lucide-react";
+import api from "@/lib/api";
+import { handleApiError } from "@/lib/utils";
+import { showSuccess, showError } from "@/lib/alerts";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      await api.post('/api/inquiries', {
+        name: formData.name,
+        email: formData.email.trim().toLowerCase(),
+        message: formData.message,
+        type: 'GENERAL',
+      });
+      await showSuccess('Message sent!', "We'll get back to you shortly.");
+      setFormData({ name: '', email: '', message: '' });
+    } catch (err: any) {
+      await showError('Something went wrong', handleApiError(err) || 'Please try again in a moment.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <Navbar />
@@ -28,28 +65,40 @@ export default function ContactPage() {
             {/* Left: Contact Form */}
             <div className="w-full lg:w-1/2 bg-white rounded-[32px] p-8 lg:p-12 shadow-sm border border-gray-100">
               <h2 className="text-[28px] font-semibold text-black mb-8">Send us a message</h2>
-              <form className="flex flex-col gap-6">
+              <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-700">Full Name</label>
+                  <label className="text-sm font-medium text-gray-700">Full Name *</label>
                   <input 
                     type="text" 
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
                     placeholder="John Doe" 
                     className="w-full bg-[#fafafa] border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                   />
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-700">Email Address</label>
+                  <label className="text-sm font-medium text-gray-700">Email Address *</label>
                   <input 
                     type="email" 
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
                     placeholder="john@example.com" 
                     className="w-full bg-[#fafafa] border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-700">Message</label>
+                  <label className="text-sm font-medium text-gray-700">Message *</label>
                   <textarea 
+                    name="message"
+                    required
+                    value={formData.message}
+                    onChange={handleInputChange}
                     placeholder="How can we help you?" 
                     rows={5}
                     className="w-full bg-[#fafafa] border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none"
@@ -57,10 +106,11 @@ export default function ContactPage() {
                 </div>
 
                 <button 
-                  type="button"
-                  className="w-full bg-black text-white rounded-full py-4 font-semibold text-[16px] hover:bg-gray-800 transition-colors mt-2"
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-black text-white rounded-full py-4 font-semibold text-[16px] hover:bg-gray-800 transition-colors mt-2 disabled:opacity-70"
                 >
-                  Send Message
+                  {isLoading ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>

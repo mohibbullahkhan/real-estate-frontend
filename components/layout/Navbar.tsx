@@ -22,9 +22,8 @@ export default function Navbar() {
             <Link href="/contact" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</Link>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            <Link href="/signin" className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Sign In</Link>
-            <Link href="/signup" className="bg-blue-600 text-white hover:bg-blue-700 px-5 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg">
-              Sign Up
+            <Link href="/admin/login" className="bg-blue-600 text-white hover:bg-blue-700 px-5 py-2 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg">
+              Sign In
             </Link>
           </div>
           {/* Mobile menu button could go here later */}

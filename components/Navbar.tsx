@@ -9,11 +9,28 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    // Check auth status
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token);
+      setIsAuthChecked(true);
+    };
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    window.addEventListener('auth-change', checkAuth);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('auth-change', checkAuth);
+    };
   }, []);
 
   const links = [
@@ -62,15 +79,24 @@ export default function Navbar() {
 
           {/* Right Side */}
           <div className="hidden lg:flex items-center gap-5">
-            <div className="flex items-center gap-1 text-gray-700 cursor-pointer hover:text-black transition-colors">
-              <Globe className="w-[16px] h-[16px]" />
-              <span className="text-[13px] font-medium">Eng</span>
-            </div>
-            <Link href="/signup">
-              <button className="bg-black text-white px-5 py-2.5 rounded-full font-medium text-[14px] hover:bg-gray-800 transition-colors">
-                Sign Up
-              </button>
-            </Link>
+
+            {isAuthChecked && (
+              <>
+                {isAuthenticated ? (
+                  <Link href="/admin/dashboard">
+                    <button className="bg-black text-white px-5 py-2.5 rounded-full font-medium text-[14px] hover:bg-gray-800 transition-colors">
+                      Dashboard
+                    </button>
+                  </Link>
+                ) : (
+                  <Link href="/admin/login">
+                    <button className="bg-black text-white px-5 py-2.5 rounded-full font-medium text-[14px] hover:bg-gray-800 transition-colors">
+                      Sign In
+                    </button>
+                  </Link>
+                )}
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -99,11 +125,23 @@ export default function Navbar() {
             </Link>
           ))}
           <div className="h-px w-24 bg-gray-500 my-4"></div>
-          <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-            <button className="bg-[#b4e674] text-black px-8 py-3 rounded-full font-semibold text-lg mt-4">
-              Sign Up
-            </button>
-          </Link>
+          {isAuthChecked && (
+            <>
+              {isAuthenticated ? (
+                <Link href="/admin/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="bg-black text-white px-8 py-3 rounded-full font-semibold text-lg mt-4">
+                    Dashboard
+                  </button>
+                </Link>
+              ) : (
+                <Link href="/admin/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="bg-[#b4e674] text-black px-8 py-3 rounded-full font-semibold text-lg mt-4">
+                    Sign In
+                  </button>
+                </Link>
+              )}
+            </>
+          )}
         </div>
       )}
     </>
